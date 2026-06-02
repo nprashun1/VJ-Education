@@ -1,0 +1,283 @@
+/* ===== Staff Registration CSS ===== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Container */
+.staff-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Card */
+.staff-card {
+  background: gray;
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 460px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  animation: fadeSlideIn 0.5s ease both;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Title */
+.staff-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.5px;
+}
+
+/* Subtitle */
+.staff-subtitle {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0 0 36px 0;
+}
+
+/* Form */
+.staff-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* Form Group */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Label */
+.form-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+/* Input */
+.form-input {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 13px 16px;
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+  color: #ffffff;
+  outline: none;
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.form-input::placeholder {
+  color: rgba(255, 255, 255, 0.28);
+}
+
+.form-input:focus {
+  border-color: #7c6fff;
+  background: rgba(124, 111, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(124, 111, 255, 0.2);
+}
+
+/* Remove number input arrows */
+.form-input[type='number']::-webkit-inner-spin-button,
+.form-input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+.form-input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Submit Button */
+.submit-btn {
+  margin-top: 10px;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #7c6fff, #a855f7);
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  box-shadow: 0 4px 20px rgba(124, 111, 255, 0.4);
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(124, 111, 255, 0.55);
+  opacity: 0.95;
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 12px rgba(124, 111, 255, 0.4);
+}
+
+/* Required star */
+.required-star {
+  color: #f87171;
+  margin-left: 2px;
+}
+
+/* Error state on input */
+.input-error {
+  border-color: #f87171 !important;
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.2) !important;
+}
+
+/* Inline error message */
+.error-msg {
+  font-size: 0.78rem;
+  color: #f87171;
+  margin-top: -4px;
+}
+
+/* Phone wrapper with +91 prefix */
+.phone-wrapper {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.phone-wrapper:focus-within {
+  border-color: #7c6fff;
+  box-shadow: 0 0 0 3px rgba(124, 111, 255, 0.2);
+}
+
+.phone-prefix {
+  padding: 13px 12px;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  user-select: none;
+}
+
+/* Override input border when inside phone-wrapper */
+.phone-input {
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  flex: 1;
+}
+
+/* PDF Upload field */
+.pdf-upload-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px dashed rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.pdf-upload-label:hover {
+  border-color: #7c6fff;
+  background: rgba(124, 111, 255, 0.07);
+}
+
+.pdf-upload-label.pdf-selected {
+  border-color: #a855f7;
+  background: rgba(168, 85, 247, 0.1);
+  border-style: solid;
+}
+
+.pdf-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.pdf-text {
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.6);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pdf-upload-label.pdf-selected .pdf-text {
+  color: #c4b5fd;
+  font-weight: 500;
+}
+
+/* Hide native file input */
+.pdf-input-hidden {
+  display: none;
+}
+
+/* Server response message */
+.server-msg {
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+.msg-success {
+  background: rgba(52, 211, 153, 0.12);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  color: #6ee7b7;
+}
+
+.msg-error {
+  background: rgba(248, 113, 113, 0.12);
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  color: #fca5a5;
+}
+
+/* Disabled submit button */
+.submit-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .staff-card {
+    padding: 36px 24px;
+  }
+
+  .staff-title {
+    font-size: 1.5rem;
+  }
+}

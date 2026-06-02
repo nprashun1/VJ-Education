@@ -1,0 +1,218 @@
+.contact-container {
+  display: flex;
+  background: url('/contact_bg.png') no-repeat center center/cover;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Inter', 'Roboto', sans-serif;
+  padding: 80px 20px;
+  min-height: 85vh;
+}
+
+.contact-card {
+  background: #ffffff;
+  padding: 3rem;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 1000px;
+  transform: translateY(0);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+}
+
+.contact-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.12);
+}
+
+.contact-title {
+  text-align: center;
+  color: #1e293b;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-top: 0;
+  margin-bottom: 2.5rem;
+  position: relative;
+}
+
+.contact-title::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70px;
+  height: 5px;
+  background: linear-gradient(90deg, #4f46e5, #0ea5e9);
+  border-radius: 4px;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 260px;
+  padding: 1.25rem 1.5rem;
+  background: #f8fafc;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.contact-item:hover {
+  background: white;
+  border-color: #e2e8f0;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+  transform: scale(1.02);
+}
+
+.contact-icon {
+  font-size: 1.5rem;
+  margin-right: 1.25rem;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eff6ff;
+  border-radius: 50%;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.contact-details {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.contact-label {
+  font-size: 0.8125rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.contact-link {
+  color: #0f172a;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.contact-link:hover {
+  color: #4f46e5;
+}
+
+/* Branch Info Styling */
+.branch-info {
+  margin-top: 2.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.branch-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 1.75rem;
+  background: #f8fafc;
+  border-radius: 16px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.branch-item:hover {
+  background: white;
+  border-color: #e2e8f0;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+}
+
+.branch-icon {
+  font-size: 1.75rem;
+  margin-right: 1.25rem;
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eff6ff;
+  border-radius: 50%;
+}
+
+.branch-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.branch-label {
+  font-size: 0.85rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.branch-details h3 {
+  margin: 0 0 0.5rem 0;
+  color: #0f172a;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.branch-details p {
+  margin: 0;
+  color: #475569;
+  font-size: 0.95rem;
+  margin-bottom: 1.25rem;
+}
+
+.map-container {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.map-iframe {
+  border: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .contact-card {
+    padding: 2rem 1.5rem;
+  }
+  
+  .contact-title {
+    font-size: 2rem;
+  }
+  
+  .contact-item {
+    padding: 1rem;
+  }
+  
+  .contact-icon {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    font-size: 1.25rem;
+    margin-right: 1rem;
+  }
+}

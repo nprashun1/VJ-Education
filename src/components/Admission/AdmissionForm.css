@@ -1,0 +1,177 @@
+.admission-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.admission-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 550px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0,0,0,0.05);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  padding: 40px;
+  transform: translateY(0);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.admission-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.12), 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.admission-title {
+  text-align: center;
+  color: #1a237e;
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.admission-subtitle {
+  text-align: center;
+  color: #546e7a;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 35px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.admission-subtitle::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, #1a237e, #42a5f5);
+  border-radius: 2px;
+}
+
+.admission-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #37474f;
+  font-size: 0.95rem;
+  padding-left: 4px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 1rem;
+  color: #333;
+  transition: all 0.3s ease;
+  background-color: #fafafa;
+  box-sizing: border-box;
+}
+
+.form-input::placeholder {
+  color: #aaa;
+  font-weight: 400;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #42a5f5;
+  background-color: #fff;
+  box-shadow: 0 0 0 4px rgba(66, 165, 245, 0.15);
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #1a237e 0%, #1976d2 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(25, 118, 210, 0.3);
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #121858 0%, #1565c0 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(25, 118, 210, 0.4);
+}
+
+.submit-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.submit-btn:disabled {
+  background: #b0bec5;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.server-msg {
+  padding: 14px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 600;
+  animation: slideDown 0.4s ease-out forwards;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.msg-success {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+  box-shadow: 0 4px 10px rgba(46, 125, 50, 0.1);
+}
+
+.msg-error {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+  box-shadow: 0 4px 10px rgba(198, 40, 40, 0.1);
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+  .admission-container {
+    padding: 30px 15px;
+  }
+  
+  .admission-card {
+    padding: 30px 20px;
+  }
+  
+  .admission-title {
+    font-size: 1.8rem;
+  }
+}
