@@ -7,7 +7,7 @@ function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
   const [authError, setAuthError] = useState(null);
-  const [activeTab, setActiveTab] = useState('staff'); // staff | admissions | notices | gallery
+  const [activeTab, setActiveTab] = useState('staff'); // staff | admissions | notices | gallery | events
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -50,6 +50,7 @@ function AdminDashboard() {
           <button className={activeTab === 'admissions' ? 'active-tab' : ''} onClick={() => setActiveTab('admissions')}>Admissions</button>
           <button className={activeTab === 'notices' ? 'active-tab' : ''} onClick={() => setActiveTab('notices')}>Notice Board</button>
           <button className={activeTab === 'gallery' ? 'active-tab' : ''} onClick={() => setActiveTab('gallery')}>Photo Gallery</button>
+          <button className={activeTab === 'events' ? 'active-tab' : ''} onClick={() => setActiveTab('events')}>Events</button>
         </div>
       </div>
 
@@ -58,6 +59,7 @@ function AdminDashboard() {
         {activeTab === 'admissions' && <AdmissionTab />}
         {activeTab === 'notices' && <NoticeTab />}
         {activeTab === 'gallery' && <GalleryTab />}
+        {activeTab === 'events' && <EventTab />}
       </div>
     </div>
   );
@@ -329,6 +331,86 @@ function GalleryTab() {
       </div>
     </div>
   );
+}
+
+// ── TAB: EVENTS ──────────────────────────────────────────────────────────────
+function EventTab() {
+  const [events, setEvents] = useState([]);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [date, setDate] = useState('');
+  const [link, setLink] = useState('');
+  const [status, setStatus] = useState('');
+
+  const fetchEvents = () => {
+    fetch('http://localhost:5000/api/events')
+      .then(r => { if (!r.ok) throw new Error('Fetch failed'); return r.json(); })
+      .then(d => setEvents(Array.isArray(d) ? d : []))
+      .catch(e => console.error(e));
+  }
+
+  useEffect(() => { fetchEvents() }, []);
+
+  const handleAdd = async (e) => {
+    e.preventDefault();
+    if (!title || !description || !date) { setStatus('❌ Required fields missing'); return; }
+    
+    setStatus('Saving...');
+    try {
+      const res = await fetch('http://localhost:5000/api/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, description, date, link })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+
+      setTitle(''); setDescription(''); setDate(''); setLink(''); setStatus('✅ Added successfully!');
+      fetchEvents();
+      setTimeout(() => setStatus(''), 3000);
+    } catch (err) { setStatus('❌ Error: ' + err.message); }
+  }
+
+  const handleDelete = async (id) => {
+    if(!window.confirm("Delete this event?")) return;
+    await fetch(`http://localhost:5000/api/events/${id}`, { method: 'DELETE' });
+    fetchEvents();
+  }
+
+  return (
+    <div>
+      <div className="admin-card add-form-card">
+        <h3 className="card-title">➕ Post New Event</h3>
+        <form onSubmit={handleAdd} className="row-form" style={{flexDirection: 'column', alignItems: 'flex-start'}}>
+          <input type="text" placeholder="Event Title *" value={title} onChange={e=>setTitle(e.target.value)} required style={{width: '100%', marginBottom: '10px'}}/>
+          <textarea placeholder="Event Description *" value={description} onChange={e=>setDescription(e.target.value)} required style={{width: '100%', marginBottom: '10px', padding: '10px'}}></textarea>
+          <input type="date" value={date} onChange={e=>setDate(e.target.value)} required style={{width: '100%', marginBottom: '10px'}}/>
+          <input type="url" placeholder="Optional URL Link (e.g. https://...)" value={link} onChange={e=>setLink(e.target.value)} style={{width: '100%', marginBottom: '10px'}} />
+          <button type="submit" className="action-btn">Publish Event</button>
+        </form>
+        {status && <p className="status-msg">{status}</p>}
+      </div>
+
+      <div className="admin-card">
+        <h3 className="card-title">Live Events on Website</h3>
+        {events.length === 0 ? <p>No upcoming events.</p> : (
+          <table className="admin-table">
+            <thead><tr><th>Date</th><th>Title</th><th>Description</th><th>Action</th></tr></thead>
+            <tbody>
+              {events.map(e => (
+                <tr key={e._id}>
+                  <td>{new Date(e.date).toLocaleDateString()}</td>
+                  <td><strong>{e.title}</strong>{e.link && <div><a href={e.link} target="_blank" rel="noreferrer">🔗 Link</a></div>}</td>
+                  <td>{e.description}</td>
+                  <td><button onClick={()=>handleDelete(e._id)} className="delete-btn">🗑️ Delete</button></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
+  )
 }
 
 export default AdminDashboard;

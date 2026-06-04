@@ -8,6 +8,7 @@ const staffRoutes = require('./routes/staffRoutes')
 const noticeRoutes = require('./routes/noticeRoutes')
 const admissionRoutes = require('./routes/admissionRoutes')
 const galleryRoutes = require('./routes/galleryRoutes')
+const eventRoutes = require('./routes/eventRoutes')
 const { getResume } = require('./controllers/staffController')
 
 const app = express()
@@ -23,6 +24,7 @@ app.get('/api/resume/:id', getResume) // Preserving the old path for backward co
 app.use('/api/notices', noticeRoutes)
 app.use('/api/admissions', admissionRoutes)
 app.use('/api/gallery', galleryRoutes)
+app.use('/api/events', eventRoutes)
 
 // ── Start Server ────────────────────────────────────────────────────────────
 app.listen(PORT, () => console.log(`🚀 Backend running at http://localhost:${PORT}`))

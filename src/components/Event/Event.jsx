@@ -1,51 +1,63 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 const Event = () => {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('http://localhost:5000/api/events')
+      .then(res => res.json())
+      .then(data => {
+        setEvents(Array.isArray(data) ? data : []);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("Failed to fetch events:", err);
+        setLoading(false);
+      });
+  }, []);
+
+  const getMonthName = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('default', { month: 'short' }).toUpperCase();
+  };
+
+  const getDay = (dateString) => {
+    const date = new Date(dateString);
+    return date.getDate();
+  };
+
   return (
     <div>
-        <section class="events">
-      <div class="container">
-        <div class="events-header">
-          <h2>🎉 Upcoming Events</h2>
-          <p>Join us for exciting events and activities throughout the year!</p>
-        </div>
-        <div class="events-wrapper">
-          <div class="event-card">
-            <div class="event-date">
-              <span class="day">15</span>
-              <span class="month">DEC</span>
-            </div>
-            <div class="event-content">
-              <h3>Annual Sports Day</h3>
-              <p>A day filled with sports, games, and fun activities for all students.</p>
-              <a href="#" class="event-link">Learn More</a>
-            </div>
+      <section className="events">
+        <div className="container">
+          <div className="events-header">
+            <h2>🎉 Upcoming Events</h2>
+            <p>Join us for exciting events and activities throughout the year!</p>
           </div>
-          <div class="event-card">
-            <div class="event-date">
-              <span class="day">22</span>
-              <span class="month">DEC</span>
-            </div>
-            <div class="event-content">
-              <h3>Science Fair</h3>
-              <p>Showcase your scientific talents with innovative projects and experiments.</p>
-              <a href="#" class="event-link">Learn More</a>
-            </div>
-          </div>
-          <div class="event-card">
-            <div class="event-date">
-              <span class="day">30</span>
-              <span class="month">DEC</span>
-            </div>
-            <div class="event-content">
-              <h3>Cultural Fest</h3>
-              <p>Experience the vibrant culture through dance, music, and performances.</p>
-              <a href="#" class="event-link">Learn More</a>
-            </div>
+          <div className="events-wrapper">
+            {loading ? (
+              <p>Loading events...</p>
+            ) : events.length === 0 ? (
+              <p>No upcoming events currently scheduled.</p>
+            ) : (
+              events.map((event) => (
+                <div className="event-card" key={event._id}>
+                  <div className="event-date">
+                    <span className="day">{getDay(event.date)}</span>
+                    <span className="month">{getMonthName(event.date)}</span>
+                  </div>
+                  <div className="event-content">
+                    <h3>{event.title}</h3>
+                    <p>{event.description}</p>
+                    {event.link && <a href={event.link} target="_blank" rel="noreferrer" className="event-link">Learn More</a>}
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
-      </div>
-    </section>
+      </section>
     </div>
   )
 }
