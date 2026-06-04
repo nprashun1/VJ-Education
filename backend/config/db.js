@@ -1,5 +1,7 @@
 require('dotenv').config();
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const dns = require('dns');
+dns.setServers(['8.8.8.8']);
 
 const MONGO_URI = process.env.MONGO_URI
 
