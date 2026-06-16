@@ -1,10 +1,15 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import './Navbar.css'
-// import Staff from '../Staaff/Staff'
 
 function Navbar() {
-  const [activeLink, setActiveLink] = useState('Home')
+  const location = useLocation();
+  const currentPath = location.pathname;
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    navigate('/');
+  }, []);
 
   const NavLinks = [
     { name: 'Home', to: '/' },
@@ -13,6 +18,7 @@ function Navbar() {
     { name: 'About', to: '/About' },
     { name: 'Contact', to: '/Contact' },
   ]
+  
   return (
     <nav className="navbar">
       <div className="navbar-brand">
@@ -20,36 +26,38 @@ function Navbar() {
         <h1 className="navbar-title"><b>VJ Education</b></h1>
       </div>
       <div className="navbar-links">
-        {NavLinks.map(link => (
-          link.dropdown ? (
-            <div className="dropdown" key={link.name}>
-              <button>{link.name}</button>
-              <div className="dropdown-content">
-                {link.dropdown.map(item => (
-                  <a href={item.to} key={item.Name}>{item.Name}</a>
-                ))}
+        {NavLinks.map(link => {
+          if (link.dropdown) {
+            const isActive = link.dropdown.some(item => currentPath.toLowerCase() === item.to.toLowerCase());
+            return (
+              <div className="dropdown" key={link.name}>
+                <button className={isActive ? 'active' : ''}>{link.name}</button>
+                <div className="dropdown-content">
+                  {link.dropdown.map(item => (
+                    <Link to={item.to} key={item.Name}>{item.Name}</Link>
+                  ))}
+                </div>
               </div>
-            </div>
-          ) : link.to ? (
-            <Link
-              to={link.to}
-              key={link.name}
-              className={activeLink === link.name ? 'active' : ''}
-              onClick={() => setActiveLink(link.name)}
-            >
-              {link.name}
-            </Link>
-          ) : (
-            <a
-              href={link.href}
-              key={link.name}
-              className={activeLink === link.name ? 'active' : ''}
-              onClick={() => setActiveLink(link.name)}
-            >
-              {link.name}
-            </a>
-          )
-        ))}
+            );
+          } else if (link.to) {
+            const isActive = link.to === '/' ? currentPath === '/' : currentPath.toLowerCase().startsWith(link.to.toLowerCase());
+            return (
+              <Link
+                to={link.to}
+                key={link.name}
+                className={isActive ? 'active' : ''}
+              >
+                {link.name}
+              </Link>
+            );
+          } else {
+            return (
+              <a href={link.href} key={link.name}>
+                {link.name}
+              </a>
+            );
+          }
+        })}
       </div>
       <div className="navbar-login">
         <Link to="/staff">Staff Recruitment</Link>

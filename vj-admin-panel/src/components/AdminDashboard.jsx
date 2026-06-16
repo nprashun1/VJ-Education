@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './AdminDashboard.css';
 
-const ADMIN_PASSWORD = "admin";
+const ADMIN_PASSWORD = "admin@vj";
 
 function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

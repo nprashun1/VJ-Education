@@ -40,8 +40,13 @@ function Staff() {
 
   const handleChange = (e) => {
     const { id, value } = e.target
-    if (id === 'phone' && !/^\d*$/.test(value)) return
-    if (id === 'phone' && value.length > 10) return
+    if (id === 'phone') {
+      if (value !== '') {
+        if (!/^\d*$/.test(value)) return
+        if (!/^[6-9]/.test(value)) return
+        if (value.length > 10) return
+      }
+    }
     setForm(prev => ({ ...prev, [id]: value }))
     setErrors(prev => ({ ...prev, [id]: '' }))
   }

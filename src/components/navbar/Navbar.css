@@ -66,7 +66,7 @@
     color: #ffffff;
 }
 
-.navbar-links a.active {
+.navbar-links a.active, .dropdown button.active {
     color: #ffffff;
     border-bottom: 2px solid #ffffff;
     border-radius: 0;

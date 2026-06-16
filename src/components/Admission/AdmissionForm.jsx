@@ -13,7 +13,24 @@ function AdmissionForm() {
   const [serverMsg, setServerMsg] = useState('')
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.id]: e.target.value })
+    const { id, value } = e.target;
+
+    if (id === 'phone') {
+      if (value !== '') {
+        if (!/^\d*$/.test(value)) return;
+        if (!/^[6-9]/.test(value)) return;
+        if (value.length > 10) return;
+      }
+    }
+
+    if (id === 'class') {
+      if (value !== '') {
+        if (!/^\d*$/.test(value)) return;
+        if (value.length > 2) return;
+      }
+    }
+
+    setForm({ ...form, [id]: value })
   }
 
   const handleSubmit = async (e) => {
