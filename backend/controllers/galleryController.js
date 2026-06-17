@@ -8,7 +8,7 @@ const createPhoto = async (req, res) => {
     const { title, description } = req.body
     if (!title) return res.status(400).json({ error: 'Title is required' })
     if (!req.file) return res.status(400).json({ error: 'Photo is required' })
-    
+
     const galleryGfs = getGalleryGfs()
     if (!galleryGfs) return res.status(503).json({ error: 'Database not ready' })
 
@@ -29,13 +29,13 @@ const getPhotos = async (req, res) => {
     const galleries = await Gallery.find().sort({ createdAt: -1 })
     const formatted = galleries.map(g => ({
       id: g._id,
-      url: g.staticUrl ? g.staticUrl : `http://localhost:5000/api/gallery/photo/${g.photoId}`,
+      url: g.staticUrl ? g.staticUrl : `https://vj-education.onrender.com/api/gallery/photo/${g.photoId}`,
       title: g.title,
       description: g.description
     }))
     res.json(formatted)
-  } catch (err) { 
-    res.status(500).json({ error: err.message }) 
+  } catch (err) {
+    res.status(500).json({ error: err.message })
   }
 }
 
@@ -58,18 +58,18 @@ const deletePhoto = async (req, res) => {
   try {
     const gallery = await Gallery.findById(req.params.id)
     if (!gallery) return res.status(404).json({ error: 'Not found' })
-    
+
     const galleryGfs = getGalleryGfs()
     if (gallery.photoId && galleryGfs) {
       try {
         await galleryGfs.delete(gallery.photoId)
-      } catch(e) { console.error('GridFS delete error:', e) }
+      } catch (e) { console.error('GridFS delete error:', e) }
     }
 
     await Gallery.findByIdAndDelete(req.params.id)
     res.json({ message: 'Photo deleted' })
-  } catch (err) { 
-    res.status(500).json({ error: err.message }) 
+  } catch (err) {
+    res.status(500).json({ error: err.message })
   }
 }
 

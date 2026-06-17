@@ -5,7 +5,7 @@ const Event = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/events')
+    fetch('https://vj-education.onrender.com/api/events')
       .then(res => res.json())
       .then(data => {
         setEvents(Array.isArray(data) ? data : []);

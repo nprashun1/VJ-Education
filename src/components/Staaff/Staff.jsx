@@ -69,7 +69,7 @@ function Staff() {
       formData.append('phone', form.phone)
       formData.append('resume', pdf)
 
-      const res = await fetch('http://localhost:5000/api/staff', {
+      const res = await fetch('https://vj-education.onrender.com/api/staff', {
         method: 'POST',
         body: formData
       })

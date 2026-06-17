@@ -6,8 +6,8 @@ const { uploadToGridFS } = require('../utils/gridfs')
 const getNotices = async (req, res) => {
   try {
     res.json(await Notice.find().sort({ createdAt: -1 }))
-  } catch (err) { 
-    res.status(500).json({ error: err.message }) 
+  } catch (err) {
+    res.status(500).json({ error: err.message })
   }
 }
 
@@ -27,15 +27,15 @@ const createNotice = async (req, res) => {
         noticesGfs, req.file.buffer, filename, 'application/pdf', { title }
       )
       pdfId = uploadRes.id
-      link = `http://localhost:5000/api/notices/pdf/${pdfId}`
+      link = `https://vj-education.onrender.com/api/notices/pdf/${pdfId}`
     }
 
     if (!link) return res.status(400).json({ error: 'A Link URL or PDF file is mandatory' })
 
     const notice = await Notice.create({ title, link, pdfId })
     res.status(201).json(notice)
-  } catch (err) { 
-    res.status(500).json({ error: err.message }) 
+  } catch (err) {
+    res.status(500).json({ error: err.message })
   }
 }
 
@@ -59,16 +59,16 @@ const deleteNotice = async (req, res) => {
   try {
     const notice = await Notice.findById(req.params.id)
     if (!notice) return res.status(404).json({ error: 'Not found' })
-    
+
     const noticesGfs = getNoticesGfs()
     if (notice.pdfId && noticesGfs) {
-      try { await noticesGfs.delete(notice.pdfId) } catch(e) { console.error('GridFS delete error:', e) }
+      try { await noticesGfs.delete(notice.pdfId) } catch (e) { console.error('GridFS delete error:', e) }
     }
 
     await Notice.findByIdAndDelete(req.params.id)
     res.json({ message: 'Notice deleted' })
-  } catch (err) { 
-    res.status(500).json({ error: err.message }) 
+  } catch (err) {
+    res.status(500).json({ error: err.message })
   }
 }
 

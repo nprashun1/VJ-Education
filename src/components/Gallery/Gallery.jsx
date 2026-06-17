@@ -13,7 +13,7 @@ export default function Gallery() {
   const duration = 4000;
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/gallery')
+    fetch('https://vj-education.onrender.com/api/gallery')
       .then(res => res.json())
       .then(data => {
         setPhotos(Array.isArray(data) ? data : []);

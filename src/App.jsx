@@ -8,7 +8,7 @@ function App() {
   const [notices, setNotices] = useState([])
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/notices')
+    fetch('https://vj-education.onrender.com/api/notices')
       .then(res => res.json())
       .then(data => setNotices(Array.isArray(data) ? data : []))
       .catch(err => console.error("Failed to load notices:", err))
@@ -44,15 +44,15 @@ function App() {
           </Link>
         </section>
       </div>
-    <Event/>
-     <div className="home-about-container">
-       <div className="home-about-content">
-        <h2>About Us:</h2>
-        <p>In your child's education journey, choosing the right school is one of the most important decisions you'll make.</p>
-        <Link to="/About">Read More</Link>
-       </div>
-     </div>
-      <Media/>
+      <Event />
+      <div className="home-about-container">
+        <div className="home-about-content">
+          <h2>About Us:</h2>
+          <p>In your child's education journey, choosing the right school is one of the most important decisions you'll make.</p>
+          <Link to="/About">Read More</Link>
+        </div>
+      </div>
+      <Media />
     </>
   )
 }

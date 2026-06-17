@@ -39,7 +39,7 @@ function AdmissionForm() {
     setServerMsg('')
 
     try {
-      const res = await fetch('http://localhost:5000/api/admissions', {
+      const res = await fetch('https://vj-education.onrender.com/api/admissions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
@@ -62,7 +62,7 @@ function AdmissionForm() {
       <div className="admission-card">
         <h2 className="admission-title">Student Admission</h2>
         <p className="admission-subtitle">Apply for session 2026-27</p>
-        
+
         {serverMsg && (
           <div className={`server-msg ${status === 'success' ? 'msg-success' : 'msg-error'}`}>
             {serverMsg}

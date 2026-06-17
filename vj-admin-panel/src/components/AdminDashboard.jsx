@@ -26,9 +26,9 @@ function AdminDashboard() {
           <h2>🔒 Super Admin Portal</h2>
           <p>Please enter the admin password to access CMS controls.</p>
           <form onSubmit={handleLogin} className="admin-login-form">
-            <input 
-              type="password" 
-              placeholder="Enter Password" 
+            <input
+              type="password"
+              placeholder="Enter Password"
               value={passwordInput}
               onChange={(e) => setPasswordInput(e.target.value)}
               required
@@ -71,7 +71,7 @@ function StaffTab() {
   const [loading, setLoading] = useState(true);
 
   const fetchStaff = () => {
-    fetch('http://localhost:5000/api/staff')
+    fetch('https://vj-education.onrender.com/api/staff')
       .then(r => { if (!r.ok) throw new Error('Fetch failed'); return r.json(); })
       .then(d => { setData(Array.isArray(d) ? d : []); setLoading(false); })
       .catch(e => { console.error(e); setLoading(false); });
@@ -82,8 +82,8 @@ function StaffTab() {
   }, []);
 
   const handleDelete = async (id) => {
-    if(!window.confirm("Delete this staff registration forever?")) return;
-    await fetch(`http://localhost:5000/api/staff/${id}`, { method: 'DELETE' });
+    if (!window.confirm("Delete this staff registration forever?")) return;
+    await fetch(`https://vj-education.onrender.com/api/staff/${id}`, { method: 'DELETE' });
     fetchStaff();
   }
 
@@ -97,16 +97,16 @@ function StaffTab() {
           <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Applied Date</th><th>Resume</th><th>Action</th></tr></thead>
           <tbody>
             {data.map(item => (
-               <tr key={item._id}>
-                 <td><strong>{item.name}</strong></td>
-                 <td>{item.email}</td>
-                 <td>{item.phone}</td>
-                 <td>{new Date(item.createdAt).toLocaleDateString()}</td>
-                 <td>
-                   {item.resumeId ? <a href={`http://localhost:5000/api/resume/${item.resumeId}`} target="_blank" className="view-resume-btn">📄 View PDF</a> : '-'}
-                 </td>
-                 <td><button onClick={()=>handleDelete(item._id)} className="delete-btn">🗑️</button></td>
-               </tr>
+              <tr key={item._id}>
+                <td><strong>{item.name}</strong></td>
+                <td>{item.email}</td>
+                <td>{item.phone}</td>
+                <td>{new Date(item.createdAt).toLocaleDateString()}</td>
+                <td>
+                  {item.resumeId ? <a href={`https://vj-education.onrender.com/api/resume/${item.resumeId}`} target="_blank" className="view-resume-btn">📄 View PDF</a> : '-'}
+                </td>
+                <td><button onClick={() => handleDelete(item._id)} className="delete-btn">🗑️</button></td>
+              </tr>
             ))}
           </tbody>
         </table>
@@ -121,7 +121,7 @@ function AdmissionTab() {
   const [loading, setLoading] = useState(true);
 
   const fetchAdmissions = () => {
-    fetch('http://localhost:5000/api/admissions')
+    fetch('https://vj-education.onrender.com/api/admissions')
       .then(r => { if (!r.ok) throw new Error('Fetch failed'); return r.json(); })
       .then(d => { setData(Array.isArray(d) ? d : []); setLoading(false); })
       .catch(e => { console.error(e); setLoading(false); });
@@ -132,8 +132,8 @@ function AdmissionTab() {
   }, []);
 
   const handleDelete = async (id) => {
-    if(!window.confirm("Delete this admission record forever?")) return;
-    await fetch(`http://localhost:5000/api/admissions/${id}`, { method: 'DELETE' });
+    if (!window.confirm("Delete this admission record forever?")) return;
+    await fetch(`https://vj-education.onrender.com/api/admissions/${id}`, { method: 'DELETE' });
     fetchAdmissions();
   }
 
@@ -147,15 +147,15 @@ function AdmissionTab() {
           <thead><tr><th>Student</th><th>Father's Name</th><th>Class</th><th>Phone</th><th>Address</th><th>Date</th><th>Action</th></tr></thead>
           <tbody>
             {data.map(item => (
-               <tr key={item._id}>
-                 <td><strong>{item.studentName}</strong></td>
-                 <td>{item.fatherName}</td>
-                 <td><span className="badge">{item.class}</span></td>
-                 <td>{item.phone}</td>
-                 <td>{item.address}</td>
-                 <td>{new Date(item.createdAt).toLocaleDateString()}</td>
-                 <td><button onClick={()=>handleDelete(item._id)} className="delete-btn">🗑️</button></td>
-               </tr>
+              <tr key={item._id}>
+                <td><strong>{item.studentName}</strong></td>
+                <td>{item.fatherName}</td>
+                <td><span className="badge">{item.class}</span></td>
+                <td>{item.phone}</td>
+                <td>{item.address}</td>
+                <td>{new Date(item.createdAt).toLocaleDateString()}</td>
+                <td><button onClick={() => handleDelete(item._id)} className="delete-btn">🗑️</button></td>
+              </tr>
             ))}
           </tbody>
         </table>
@@ -174,7 +174,7 @@ function NoticeTab() {
   const [status, setStatus] = useState('');
 
   const fetchNotices = () => {
-    fetch('http://localhost:5000/api/notices')
+    fetch('https://vj-education.onrender.com/api/notices')
       .then(r => { if (!r.ok) throw new Error('Fetch failed'); return r.json(); })
       .then(d => setNotices(Array.isArray(d) ? d : []))
       .catch(e => console.error(e));
@@ -186,7 +186,7 @@ function NoticeTab() {
     e.preventDefault();
     if (linkType === 'url' && !link) { setStatus('❌ URL Link is missing'); return; }
     if (linkType === 'pdf' && !pdf) { setStatus('❌ PDF file is missing'); return; }
-    
+
     setStatus('Saving...');
     const formData = new FormData();
     formData.append('title', title);
@@ -194,7 +194,7 @@ function NoticeTab() {
     if (linkType === 'pdf') formData.append('pdf', pdf);
 
     try {
-      const res = await fetch('http://localhost:5000/api/notices', {
+      const res = await fetch('https://vj-education.onrender.com/api/notices', {
         method: 'POST',
         body: formData
       });
@@ -208,8 +208,8 @@ function NoticeTab() {
   }
 
   const handleDelete = async (id) => {
-    if(!window.confirm("Delete this notice?")) return;
-    await fetch(`http://localhost:5000/api/notices/${id}`, { method: 'DELETE' });
+    if (!window.confirm("Delete this notice?")) return;
+    await fetch(`https://vj-education.onrender.com/api/notices/${id}`, { method: 'DELETE' });
     fetchNotices();
   }
 
@@ -217,21 +217,21 @@ function NoticeTab() {
     <div>
       <div className="admin-card add-form-card">
         <h3 className="card-title">➕ Post New Notice</h3>
-        <form onSubmit={handleAdd} className="row-form" style={{flexDirection: 'column', alignItems: 'flex-start'}}>
-          <input type="text" placeholder="Notice Text / Title *" value={title} onChange={e=>setTitle(e.target.value)} required style={{width: '100%'}}/>
-          
-          <div style={{display: 'flex', gap: '20px', marginTop: '10px', marginBottom: '10px'}}>
+        <form onSubmit={handleAdd} className="row-form" style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+          <input type="text" placeholder="Notice Text / Title *" value={title} onChange={e => setTitle(e.target.value)} required style={{ width: '100%' }} />
+
+          <div style={{ display: 'flex', gap: '20px', marginTop: '10px', marginBottom: '10px' }}>
             <label><input type="radio" checked={linkType === 'url'} onChange={() => setLinkType('url')} /> Enter URL Link</label>
             <label><input type="radio" checked={linkType === 'pdf'} onChange={() => setLinkType('pdf')} /> Upload PDF File</label>
           </div>
 
           {linkType === 'url' ? (
-             <input type="url" placeholder="https://example.com *" value={link} onChange={e=>setLink(e.target.value)} style={{width: '100%'}} required={linkType==='url'} />
+            <input type="url" placeholder="https://example.com *" value={link} onChange={e => setLink(e.target.value)} style={{ width: '100%' }} required={linkType === 'url'} />
           ) : (
-             <input type="file" accept="application/pdf" onChange={e=>setPdf(e.target.files[0])} style={{width: '100%'}} required={linkType==='pdf'} />
+            <input type="file" accept="application/pdf" onChange={e => setPdf(e.target.files[0])} style={{ width: '100%' }} required={linkType === 'pdf'} />
           )}
 
-          <button type="submit" className="action-btn" style={{marginTop: '10px'}}>Post to Website</button>
+          <button type="submit" className="action-btn" style={{ marginTop: '10px' }}>Post to Website</button>
         </form>
         {status && <p className="status-msg">{status}</p>}
       </div>
@@ -247,7 +247,7 @@ function NoticeTab() {
                   <td>{n.title}</td>
                   <td><a href={n.link} target="_blank" rel="noreferrer">Open Link</a></td>
                   <td>{new Date(n.createdAt).toLocaleDateString()}</td>
-                  <td><button onClick={()=>handleDelete(n._id)} className="delete-btn">🗑️ Delete</button></td>
+                  <td><button onClick={() => handleDelete(n._id)} className="delete-btn">🗑️ Delete</button></td>
                 </tr>
               ))}
             </tbody>
@@ -266,25 +266,25 @@ function GalleryTab() {
   const [status, setStatus] = useState('');
 
   const fetchPhotos = () => {
-    fetch('http://localhost:5000/api/gallery')
+    fetch('https://vj-education.onrender.com/api/gallery')
       .then(r => { if (!r.ok) throw new Error('Fetch failed'); return r.json(); })
       .then(d => setPhotos(Array.isArray(d) ? d : []))
       .catch(e => console.error(e));
   }
-  
+
   useEffect(() => { fetchPhotos() }, []);
 
   const handleUpload = async (e) => {
     e.preventDefault();
     if (!file) return;
     setStatus('Uploading...');
-    
+
     const formData = new FormData();
     formData.append('photo', file);
     formData.append('title', title);
 
     try {
-      const res = await fetch('http://localhost:5000/api/gallery', {
+      const res = await fetch('https://vj-education.onrender.com/api/gallery', {
         method: 'POST', body: formData
       });
       if (!res.ok) {
@@ -298,8 +298,8 @@ function GalleryTab() {
   };
 
   const handleDelete = async (id) => {
-    if(!window.confirm("Delete this photo? This will remove it from the public gallery.")) return;
-    await fetch(`http://localhost:5000/api/gallery/${id}`, { method: 'DELETE' });
+    if (!window.confirm("Delete this photo? This will remove it from the public gallery.")) return;
+    await fetch(`https://vj-education.onrender.com/api/gallery/${id}`, { method: 'DELETE' });
     fetchPhotos();
   }
 
@@ -308,8 +308,8 @@ function GalleryTab() {
       <div className="admin-card add-form-card">
         <h3 className="card-title">➕ Upload to Gallery</h3>
         <form onSubmit={handleUpload} className="row-form">
-          <input type="file" accept="image/*" onChange={e=>setFile(e.target.files[0])} required />
-          <input type="text" placeholder="Photo Caption *" value={title} onChange={e=>setTitle(e.target.value)} required />
+          <input type="file" accept="image/*" onChange={e => setFile(e.target.files[0])} required />
+          <input type="text" placeholder="Photo Caption *" value={title} onChange={e => setTitle(e.target.value)} required />
           <button type="submit" className="action-btn">Upload Photo</button>
         </form>
         {status && <p className="status-msg">{status}</p>}
@@ -323,7 +323,7 @@ function GalleryTab() {
               <img src={p.url} alt={p.title} />
               <div className="gallery-meta">
                 <span>{p.title}</span>
-                <button onClick={()=>handleDelete(p.id)} className="delete-icon-btn">❌</button>
+                <button onClick={() => handleDelete(p.id)} className="delete-icon-btn">❌</button>
               </div>
             </div>
           ))}
@@ -343,7 +343,7 @@ function EventTab() {
   const [status, setStatus] = useState('');
 
   const fetchEvents = () => {
-    fetch('http://localhost:5000/api/events')
+    fetch('https://vj-education.onrender.com/api/events')
       .then(r => { if (!r.ok) throw new Error('Fetch failed'); return r.json(); })
       .then(d => setEvents(Array.isArray(d) ? d : []))
       .catch(e => console.error(e));
@@ -354,10 +354,10 @@ function EventTab() {
   const handleAdd = async (e) => {
     e.preventDefault();
     if (!title || !description || !date) { setStatus('❌ Required fields missing'); return; }
-    
+
     setStatus('Saving...');
     try {
-      const res = await fetch('http://localhost:5000/api/events', {
+      const res = await fetch('https://vj-education.onrender.com/api/events', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title, description, date, link })
@@ -372,8 +372,8 @@ function EventTab() {
   }
 
   const handleDelete = async (id) => {
-    if(!window.confirm("Delete this event?")) return;
-    await fetch(`http://localhost:5000/api/events/${id}`, { method: 'DELETE' });
+    if (!window.confirm("Delete this event?")) return;
+    await fetch(`https://vj-education.onrender.com/api/events/${id}`, { method: 'DELETE' });
     fetchEvents();
   }
 
@@ -381,11 +381,11 @@ function EventTab() {
     <div>
       <div className="admin-card add-form-card">
         <h3 className="card-title">➕ Post New Event</h3>
-        <form onSubmit={handleAdd} className="row-form" style={{flexDirection: 'column', alignItems: 'flex-start'}}>
-          <input type="text" placeholder="Event Title *" value={title} onChange={e=>setTitle(e.target.value)} required style={{width: '100%', marginBottom: '10px'}}/>
-          <textarea placeholder="Event Description *" value={description} onChange={e=>setDescription(e.target.value)} required style={{width: '100%', marginBottom: '10px', padding: '10px'}}></textarea>
-          <input type="date" value={date} onChange={e=>setDate(e.target.value)} required style={{width: '100%', marginBottom: '10px'}}/>
-          <input type="url" placeholder="Optional URL Link (e.g. https://...)" value={link} onChange={e=>setLink(e.target.value)} style={{width: '100%', marginBottom: '10px'}} />
+        <form onSubmit={handleAdd} className="row-form" style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+          <input type="text" placeholder="Event Title *" value={title} onChange={e => setTitle(e.target.value)} required style={{ width: '100%', marginBottom: '10px' }} />
+          <textarea placeholder="Event Description *" value={description} onChange={e => setDescription(e.target.value)} required style={{ width: '100%', marginBottom: '10px', padding: '10px' }}></textarea>
+          <input type="date" value={date} onChange={e => setDate(e.target.value)} required style={{ width: '100%', marginBottom: '10px' }} />
+          <input type="url" placeholder="Optional URL Link (e.g. https://...)" value={link} onChange={e => setLink(e.target.value)} style={{ width: '100%', marginBottom: '10px' }} />
           <button type="submit" className="action-btn">Publish Event</button>
         </form>
         {status && <p className="status-msg">{status}</p>}
@@ -402,7 +402,7 @@ function EventTab() {
                   <td>{new Date(e.date).toLocaleDateString()}</td>
                   <td><strong>{e.title}</strong>{e.link && <div><a href={e.link} target="_blank" rel="noreferrer">🔗 Link</a></div>}</td>
                   <td>{e.description}</td>
-                  <td><button onClick={()=>handleDelete(e._id)} className="delete-btn">🗑️ Delete</button></td>
+                  <td><button onClick={() => handleDelete(e._id)} className="delete-btn">🗑️ Delete</button></td>
                 </tr>
               ))}
             </tbody>
