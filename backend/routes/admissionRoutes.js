@@ -1,9 +1,10 @@
 const express = require('express')
 const router = express.Router()
 const { getAdmissions, createAdmission, deleteAdmission } = require('../controllers/admissionController')
+const authMiddleware = require('../middleware/authMiddleware')
 
-router.get('/', getAdmissions)
+router.get('/', authMiddleware, getAdmissions)
 router.post('/', createAdmission)
-router.delete('/:id', deleteAdmission)
+router.delete('/:id', authMiddleware, deleteAdmission)
 
 module.exports = router

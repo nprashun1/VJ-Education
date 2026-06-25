@@ -7,3 +7,11 @@
     align-items: center;
     padding: 20px;
 }
+
+@media (max-width: 600px) {
+    .footer {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+}

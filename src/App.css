@@ -254,3 +254,22 @@ section:not(.notice-board) a:active {
   transform: translateY(-3px);
   box-shadow: 0 12px 25px rgba(25, 118, 210, 0.4);
 }
+
+@media (max-width: 768px) {
+  .sections-row {
+    flex-direction: column;
+    padding: 10px;
+  }
+  .home-about-content {
+    padding: 20px 25px;
+  }
+  .home-about-content h2 {
+    font-size: 1.8rem;
+  }
+  section:not(.notice-board) {
+    padding: 20px 24px;
+  }
+  .video-container {
+    padding: 0 10px;
+  }
+}

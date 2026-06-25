@@ -9,6 +9,7 @@ const noticeRoutes = require('./routes/noticeRoutes')
 const admissionRoutes = require('./routes/admissionRoutes')
 const galleryRoutes = require('./routes/galleryRoutes')
 const eventRoutes = require('./routes/eventRoutes')
+const authRoutes = require('./routes/authRoutes')
 const { getResume } = require('./controllers/staffController')
 
 const app = express()
@@ -19,6 +20,7 @@ app.use(cors())
 app.use(express.json())
 
 // ── Routes ──────────────────────────────────────────────────────────────────
+app.use('/api/auth', authRoutes)
 app.use('/api/staff', staffRoutes)
 app.get('/api/resume/:id', getResume) // Preserving the old path for backward compatibility
 app.use('/api/notices', noticeRoutes)

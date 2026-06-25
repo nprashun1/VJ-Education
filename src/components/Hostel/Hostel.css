@@ -115,3 +115,15 @@
   border-color: #666;
   color: #aaa;
 }
+
+@media (max-width: 768px) {
+  .hostel-container {
+    padding: 2rem 1rem;
+  }
+  .hostel-header h2 {
+    font-size: 2rem;
+  }
+  .hostel-header p {
+    font-size: 1rem;
+  }
+}

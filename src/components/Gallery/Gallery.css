@@ -222,3 +222,20 @@
 .loading-text {
   font-weight: 500;
 }
+
+@media (max-width: 768px) {
+  .gallery-wrapper {
+    aspect-ratio: auto;
+    height: 350px;
+  }
+  .gallery-title {
+    font-size: 1.6rem;
+  }
+  .photo-title {
+    font-size: 1.2rem;
+  }
+  .gallery-btn {
+    width: 40px;
+    height: 40px;
+  }
+}

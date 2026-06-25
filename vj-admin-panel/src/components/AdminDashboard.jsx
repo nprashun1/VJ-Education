@@ -1,22 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import './AdminDashboard.css';
 
-const ADMIN_PASSWORD = "admin@vj";
+const API_BASE = import.meta.env.VITE_API_URL || 'https://vj-education.onrender.com';
+const getAuthHeaders = () => ({ Authorization: `Bearer ${localStorage.getItem('adminToken')}` });
 
 function AdminDashboard() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('adminToken'));
+  const [usernameInput, setUsernameInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
   const [authError, setAuthError] = useState(null);
   const [activeTab, setActiveTab] = useState('staff'); // staff | admissions | notices | gallery | events
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (passwordInput === ADMIN_PASSWORD) {
-      setIsAuthenticated(true);
-      setAuthError(null);
-    } else {
-      setAuthError("Incorrect Password! Access Denied.");
+    try {
+      const res = await fetch(`${API_BASE}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: usernameInput, password: passwordInput })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        localStorage.setItem('adminToken', data.token);
+        setIsAuthenticated(true);
+        setAuthError(null);
+      } else {
+        setAuthError(data.error || "Login failed");
+      }
+    } catch (err) {
+      setAuthError("Network error. Please try again.");
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('adminToken');
+    setIsAuthenticated(false);
   };
 
   if (!isAuthenticated) {
@@ -26,6 +44,13 @@ function AdminDashboard() {
           <h2>🔒 Super Admin Portal</h2>
           <p>Please enter the admin password to access CMS controls.</p>
           <form onSubmit={handleLogin} className="admin-login-form">
+            <input
+              type="text"
+              placeholder="Enter Username"
+              value={usernameInput}
+              onChange={(e) => setUsernameInput(e.target.value)}
+              required
+            />
             <input
               type="password"
               placeholder="Enter Password"
@@ -43,8 +68,9 @@ function AdminDashboard() {
 
   return (
     <div className="admin-layout">
-      <div className="admin-header">
+      <div className="admin-header" style={{ position: 'relative' }}>
         <h2>VJ Admin Control Panel</h2>
+        <button onClick={handleLogout} className="logout-btn" style={{ position: 'absolute', right: '20px', top: '20px', background: '#e74c3c', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>Logout</button>
         <div className="admin-tabs">
           <button className={activeTab === 'staff' ? 'active-tab' : ''} onClick={() => setActiveTab('staff')}>Staff Registrations</button>
           <button className={activeTab === 'admissions' ? 'active-tab' : ''} onClick={() => setActiveTab('admissions')}>Admissions</button>
@@ -71,7 +97,7 @@ function StaffTab() {
   const [loading, setLoading] = useState(true);
 
   const fetchStaff = () => {
-    fetch('https://vj-education.onrender.com/api/staff')
+    fetch(`${API_BASE}/api/staff`, { headers: getAuthHeaders() })
       .then(r => { if (!r.ok) throw new Error('Fetch failed'); return r.json(); })
       .then(d => { setData(Array.isArray(d) ? d : []); setLoading(false); })
       .catch(e => { console.error(e); setLoading(false); });
@@ -83,7 +109,7 @@ function StaffTab() {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this staff registration forever?")) return;
-    await fetch(`https://vj-education.onrender.com/api/staff/${id}`, { method: 'DELETE' });
+    await fetch(`${API_BASE}/api/staff/${id}`, { method: 'DELETE', headers: getAuthHeaders() });
     fetchStaff();
   }
 
@@ -121,7 +147,7 @@ function AdmissionTab() {
   const [loading, setLoading] = useState(true);
 
   const fetchAdmissions = () => {
-    fetch('https://vj-education.onrender.com/api/admissions')
+    fetch(`${API_BASE}/api/admissions`, { headers: getAuthHeaders() })
       .then(r => { if (!r.ok) throw new Error('Fetch failed'); return r.json(); })
       .then(d => { setData(Array.isArray(d) ? d : []); setLoading(false); })
       .catch(e => { console.error(e); setLoading(false); });
@@ -133,7 +159,7 @@ function AdmissionTab() {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this admission record forever?")) return;
-    await fetch(`https://vj-education.onrender.com/api/admissions/${id}`, { method: 'DELETE' });
+    await fetch(`${API_BASE}/api/admissions/${id}`, { method: 'DELETE', headers: getAuthHeaders() });
     fetchAdmissions();
   }
 
@@ -174,7 +200,7 @@ function NoticeTab() {
   const [status, setStatus] = useState('');
 
   const fetchNotices = () => {
-    fetch('https://vj-education.onrender.com/api/notices')
+    fetch(`${API_BASE}/api/notices`)
       .then(r => { if (!r.ok) throw new Error('Fetch failed'); return r.json(); })
       .then(d => setNotices(Array.isArray(d) ? d : []))
       .catch(e => console.error(e));
@@ -194,8 +220,9 @@ function NoticeTab() {
     if (linkType === 'pdf') formData.append('pdf', pdf);
 
     try {
-      const res = await fetch('https://vj-education.onrender.com/api/notices', {
+      const res = await fetch(`${API_BASE}/api/notices`, {
         method: 'POST',
+        headers: getAuthHeaders(),
         body: formData
       });
       const data = await res.json();
@@ -209,7 +236,7 @@ function NoticeTab() {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this notice?")) return;
-    await fetch(`https://vj-education.onrender.com/api/notices/${id}`, { method: 'DELETE' });
+    await fetch(`${API_BASE}/api/notices/${id}`, { method: 'DELETE', headers: getAuthHeaders() });
     fetchNotices();
   }
 
@@ -266,7 +293,7 @@ function GalleryTab() {
   const [status, setStatus] = useState('');
 
   const fetchPhotos = () => {
-    fetch('https://vj-education.onrender.com/api/gallery')
+    fetch(`${API_BASE}/api/gallery`)
       .then(r => { if (!r.ok) throw new Error('Fetch failed'); return r.json(); })
       .then(d => setPhotos(Array.isArray(d) ? d : []))
       .catch(e => console.error(e));
@@ -284,8 +311,10 @@ function GalleryTab() {
     formData.append('title', title);
 
     try {
-      const res = await fetch('https://vj-education.onrender.com/api/gallery', {
-        method: 'POST', body: formData
+      const res = await fetch(`${API_BASE}/api/gallery`, {
+        method: 'POST', 
+        headers: getAuthHeaders(),
+        body: formData
       });
       if (!res.ok) {
         const data = await res.json();
@@ -299,7 +328,7 @@ function GalleryTab() {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this photo? This will remove it from the public gallery.")) return;
-    await fetch(`https://vj-education.onrender.com/api/gallery/${id}`, { method: 'DELETE' });
+    await fetch(`${API_BASE}/api/gallery/${id}`, { method: 'DELETE', headers: getAuthHeaders() });
     fetchPhotos();
   }
 
@@ -343,7 +372,7 @@ function EventTab() {
   const [status, setStatus] = useState('');
 
   const fetchEvents = () => {
-    fetch('https://vj-education.onrender.com/api/events')
+    fetch(`${API_BASE}/api/events`)
       .then(r => { if (!r.ok) throw new Error('Fetch failed'); return r.json(); })
       .then(d => setEvents(Array.isArray(d) ? d : []))
       .catch(e => console.error(e));
@@ -357,9 +386,9 @@ function EventTab() {
 
     setStatus('Saving...');
     try {
-      const res = await fetch('https://vj-education.onrender.com/api/events', {
+      const res = await fetch(`${API_BASE}/api/events`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
         body: JSON.stringify({ title, description, date, link })
       });
       const data = await res.json();
@@ -373,7 +402,7 @@ function EventTab() {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this event?")) return;
-    await fetch(`https://vj-education.onrender.com/api/events/${id}`, { method: 'DELETE' });
+    await fetch(`${API_BASE}/api/events/${id}`, { method: 'DELETE', headers: getAuthHeaders() });
     fetchEvents();
   }
 
