@@ -55,34 +55,36 @@ function AdminDashboard() {
   };
 
   // Fetch counts when authenticated
-  const refreshCounts = () => {
+  const refreshCounts = async () => {
     if (!isAuthenticated) return;
     const headers = getAuthHeaders();
 
-    fetch(`${API_BASE}/api/staff`, { headers })
-      .then(r => r.ok ? r.json() : [])
-      .then(d => setCounts(prev => ({ ...prev, staff: Array.isArray(d) ? d.length : 0 })))
-      .catch(() => {});
+    const getCount = async (url, options) => {
+      try {
+        const res = await fetch(url, options);
+        if (!res.ok) return null;
+        const d = await res.json();
+        return Array.isArray(d) ? d.length : 0;
+      } catch {
+        return null;
+      }
+    };
 
-    fetch(`${API_BASE}/api/admissions`, { headers })
-      .then(r => r.ok ? r.json() : [])
-      .then(d => setCounts(prev => ({ ...prev, admissions: Array.isArray(d) ? d.length : 0 })))
-      .catch(() => {});
+    const [staff, admissions, notices, gallery, events] = await Promise.all([
+      getCount(`${API_BASE}/api/staff`, { headers }),
+      getCount(`${API_BASE}/api/admissions`, { headers }),
+      getCount(`${API_BASE}/api/notices`),
+      getCount(`${API_BASE}/api/gallery`),
+      getCount(`${API_BASE}/api/events`)
+    ]);
 
-    fetch(`${API_BASE}/api/notices`)
-      .then(r => r.ok ? r.json() : [])
-      .then(d => setCounts(prev => ({ ...prev, notices: Array.isArray(d) ? d.length : 0 })))
-      .catch(() => {});
-
-    fetch(`${API_BASE}/api/gallery`)
-      .then(r => r.ok ? r.json() : [])
-      .then(d => setCounts(prev => ({ ...prev, gallery: Array.isArray(d) ? d.length : 0 })))
-      .catch(() => {});
-
-    fetch(`${API_BASE}/api/events`)
-      .then(r => r.ok ? r.json() : [])
-      .then(d => setCounts(prev => ({ ...prev, events: Array.isArray(d) ? d.length : 0 })))
-      .catch(() => {});
+    setCounts(prev => ({
+      staff: staff !== null ? staff : prev.staff,
+      admissions: admissions !== null ? admissions : prev.admissions,
+      notices: notices !== null ? notices : prev.notices,
+      gallery: gallery !== null ? gallery : prev.gallery,
+      events: events !== null ? events : prev.events
+    }));
   };
 
   useEffect(() => {
@@ -301,15 +303,18 @@ function StaffTab({ onDataChange }) {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
-  const fetchStaff = () => {
-    fetch(`${API_BASE}/api/staff`, { headers: getAuthHeaders() })
-      .then(r => { if (!r.ok) throw new Error('Fetch failed'); return r.json(); })
-      .then(d => {
-        setData(Array.isArray(d) ? d : []);
-        setLoading(false);
-        if (onDataChange) onDataChange();
-      })
-      .catch(e => { console.error(e); setLoading(false); });
+  const fetchStaff = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/staff`, { headers: getAuthHeaders() });
+      if (!res.ok) throw new Error('Fetch failed');
+      const d = await res.json();
+      setData(Array.isArray(d) ? d : []);
+      if (onDataChange) onDataChange();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -446,15 +451,18 @@ function AdmissionTab({ onDataChange }) {
   const [search, setSearch] = useState('');
   const [classFilter, setClassFilter] = useState('ALL');
 
-  const fetchAdmissions = () => {
-    fetch(`${API_BASE}/api/admissions`, { headers: getAuthHeaders() })
-      .then(r => { if (!r.ok) throw new Error('Fetch failed'); return r.json(); })
-      .then(d => {
-        setData(Array.isArray(d) ? d : []);
-        setLoading(false);
-        if (onDataChange) onDataChange();
-      })
-      .catch(e => { console.error(e); setLoading(false); });
+  const fetchAdmissions = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/admissions`, { headers: getAuthHeaders() });
+      if (!res.ok) throw new Error('Fetch failed');
+      const d = await res.json();
+      setData(Array.isArray(d) ? d : []);
+      if (onDataChange) onDataChange();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -595,15 +603,18 @@ function NoticeTab({ onDataChange }) {
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(true);
 
-  const fetchNotices = () => {
-    fetch(`${API_BASE}/api/notices`)
-      .then(r => { if (!r.ok) throw new Error('Fetch failed'); return r.json(); })
-      .then(d => {
-        setNotices(Array.isArray(d) ? d : []);
-        setLoading(false);
-        if (onDataChange) onDataChange();
-      })
-      .catch(e => { console.error(e); setLoading(false); });
+  const fetchNotices = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/notices`);
+      if (!res.ok) throw new Error('Fetch failed');
+      const d = await res.json();
+      setNotices(Array.isArray(d) ? d : []);
+      if (onDataChange) onDataChange();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => { fetchNotices() }, []);
@@ -800,15 +811,18 @@ function GalleryTab({ onDataChange }) {
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(true);
 
-  const fetchPhotos = () => {
-    fetch(`${API_BASE}/api/gallery`)
-      .then(r => { if (!r.ok) throw new Error('Fetch failed'); return r.json(); })
-      .then(d => {
-        setPhotos(Array.isArray(d) ? d : []);
-        setLoading(false);
-        if (onDataChange) onDataChange();
-      })
-      .catch(e => { console.error(e); setLoading(false); });
+  const fetchPhotos = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/gallery`);
+      if (!res.ok) throw new Error('Fetch failed');
+      const d = await res.json();
+      setPhotos(Array.isArray(d) ? d : []);
+      if (onDataChange) onDataChange();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => { fetchPhotos() }, []);
@@ -942,15 +956,18 @@ function EventTab({ onDataChange }) {
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(true);
 
-  const fetchEvents = () => {
-    fetch(`${API_BASE}/api/events`)
-      .then(r => { if (!r.ok) throw new Error('Fetch failed'); return r.json(); })
-      .then(d => {
-        setEvents(Array.isArray(d) ? d : []);
-        setLoading(false);
-        if (onDataChange) onDataChange();
-      })
-      .catch(e => { console.error(e); setLoading(false); });
+  const fetchEvents = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/events`);
+      if (!res.ok) throw new Error('Fetch failed');
+      const d = await res.json();
+      setEvents(Array.isArray(d) ? d : []);
+      if (onDataChange) onDataChange();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => { fetchEvents() }, []);

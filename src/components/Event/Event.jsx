@@ -37,21 +37,25 @@ const Event = () => {
   ];
 
   useEffect(() => {
-    fetch('https://vj-education.onrender.com/api/events')
-      .then(res => res.json())
-      .then(data => {
+    const fetchEvents = async () => {
+      try {
+        const res = await fetch('https://vj-education.onrender.com/api/events');
+        if (!res.ok) throw new Error('Failed to fetch events');
+        const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
           setEvents(data);
         } else {
           setEvents(defaultEvents);
         }
-        setLoading(false);
-      })
-      .catch(err => {
+      } catch (err) {
         console.error("Failed to fetch events:", err);
         setEvents(defaultEvents);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchEvents();
   }, []);
 
   const getMonthName = (dateString) => {

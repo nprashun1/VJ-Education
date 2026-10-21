@@ -1,0 +1,171 @@
+/* =========================================================
+   VJ EDUCATION - ERROR BOUNDARY FALLBACK STYLES
+   ========================================================= */
+
+.error-boundary-wrapper {
+  min-height: calc(100vh - 160px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem 5rem;
+  background: radial-gradient(circle at 50% 20%, rgba(225, 29, 72, 0.08) 0%, rgba(15, 23, 42, 0.03) 60%, var(--bg-app) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.error-boundary-card {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  width: 100%;
+  background: var(--surface-card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg), 0 0 30px rgba(184, 33, 50, 0.08);
+  padding: 3.5rem 2.5rem;
+  text-align: center;
+  animation: cardEntrance 0.5s ease-out forwards;
+}
+
+.error-icon-container {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+  border-radius: 50%;
+  background: var(--primary-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  box-shadow: 0 0 0 8px rgba(184, 33, 50, 0.08);
+  animation: pulseError 2s infinite ease-in-out;
+}
+
+@keyframes pulseError {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+.error-tag {
+  display: inline-block;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(184, 33, 50, 0.1);
+  color: var(--primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 1rem;
+}
+
+.error-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.5px;
+}
+
+.error-desc {
+  font-size: 1rem;
+  color: var(--text-muted);
+  max-width: 500px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
+
+.error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.btn-reload {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--primary-gradient);
+  color: #ffffff;
+  padding: 0.8rem 1.6rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-glow-red);
+  transition: all 0.2s ease;
+}
+
+.btn-reload:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(184, 33, 50, 0.4);
+}
+
+.btn-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #ffffff;
+  color: var(--text-primary);
+  border: 1.5px solid var(--glass-border-subtle);
+  padding: 0.8rem 1.5rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-home:hover {
+  background: var(--sky-subtle);
+  border-color: var(--navy);
+  transform: translateY(-2px);
+}
+
+/* Collapsible technical details */
+.error-details-box {
+  border-top: 1px dashed var(--glass-border-subtle);
+  padding-top: 1.5rem;
+  text-align: left;
+}
+
+.error-toggle-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 auto;
+  transition: color 0.2s ease;
+}
+
+.error-toggle-btn:hover {
+  color: var(--text-primary);
+}
+
+.error-code-block {
+  margin-top: 1rem;
+  background: #0f172a;
+  color: #f1f5f9;
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  font-family: monospace;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 200px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}

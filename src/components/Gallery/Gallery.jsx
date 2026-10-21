@@ -1,7 +1,32 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './Gallery.css';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+
+// Kept outside the component so it has a stable memory reference
+const DEFAULT_PHOTOS = [
+  {
+    _id: 'g1',
+    url: '/logo dp.jpg',
+    title: 'VJ Education Campus Flagship Entrance',
+    description: 'Modern, secure and student-friendly environment welcoming students every morning.',
+    category: 'Campus'
+  },
+  {
+    _id: 'g2',
+    url: '/logo dp.jpg',
+    title: 'Digital Smart Classroom Session',
+    description: 'Interactive screens and collaborative seating for deeper conceptual understanding.',
+    category: 'Academics'
+  },
+  {
+    _id: 'g3',
+    url: '/logo dp.jpg',
+    title: 'Annual Sports & Athletic Meet',
+    description: 'Fostering teamwork, endurance, and sporting spirit across track and field events.',
+    category: 'Sports'
+  }
+];
 
 export default function Gallery() {
   const [photos, setPhotos] = useState([]);
@@ -10,80 +35,89 @@ export default function Gallery() {
   const [direction, setDirection] = useState('next');
   const [loading, setLoading] = useState(true);
 
-  // Fallback high-quality campus photos
-  const defaultPhotos = [
-    {
-      _id: 'g1',
-      url: '/logo dp.jpg',
-      title: 'VJ Education Campus Flagship Entrance',
-      description: 'Modern, secure and student-friendly environment welcoming students every morning.',
-      category: 'Campus'
-    },
-    {
-      _id: 'g2',
-      url: '/logo dp.jpg',
-      title: 'Digital Smart Classroom Session',
-      description: 'Interactive screens and collaborative seating for deeper conceptual understanding.',
-      category: 'Academics'
-    },
-    {
-      _id: 'g3',
-      url: '/logo dp.jpg',
-      title: 'Annual Sports & Athletic Meet',
-      description: 'Fostering teamwork, endurance, and sporting spirit across track and field events.',
-      category: 'Sports'
-    }
-  ];
-
   const duration = 5000;
+  const isAnimatingRef = useRef(false);
+  const transitionTimeoutRef = useRef(null);
 
+  // Fetch campus photos
   useEffect(() => {
-    fetch('https://vj-education.onrender.com/api/gallery')
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
-          setPhotos(data);
-        } else {
-          setPhotos(defaultPhotos);
+    let isMounted = true;
+
+    const fetchGallery = async () => {
+      try {
+        const res = await fetch('https://vj-education.onrender.com/api/gallery');
+        if (!res.ok) throw new Error('Failed to fetch gallery');
+        const data = await res.json();
+        
+        if (isMounted) {
+          if (Array.isArray(data) && data.length > 0) {
+            setPhotos(data);
+          } else {
+            setPhotos(DEFAULT_PHOTOS);
+          }
         }
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("Gallery fetch failed, using fallback:", err);
-        setPhotos(defaultPhotos);
-        setLoading(false);
-      });
+      } catch (err) {
+        console.error('Gallery fetch failed, using fallback:', err);
+        if (isMounted) {
+          setPhotos(DEFAULT_PHOTOS);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchGallery();
+
+    return () => {
+      isMounted = false;
+      if (transitionTimeoutRef.current) {
+        clearTimeout(transitionTimeoutRef.current);
+      }
+    };
   }, []);
 
-  const goTo = useCallback((index, dir = 'next') => {
-    if (animating || photos.length === 0) return;
+  // Universal navigation handler accepting either a static index or updater function
+  const goTo = useCallback((targetIndexOrUpdater, dir = 'next') => {
+    if (isAnimatingRef.current || photos.length <= 1) return;
+
+    isAnimatingRef.current = true;
     setAnimating(true);
     setDirection(dir);
-    setTimeout(() => {
-      setCurrent(index);
+
+    transitionTimeoutRef.current = setTimeout(() => {
+      setCurrent((prev) => {
+        const nextIndex = typeof targetIndexOrUpdater === 'function'
+          ? targetIndexOrUpdater(prev)
+          : targetIndexOrUpdater;
+        return (nextIndex + photos.length) % photos.length;
+      });
+      isAnimatingRef.current = false;
       setAnimating(false);
     }, 400);
-  }, [animating, photos.length]);
+  }, [photos.length]);
 
   const handleNext = useCallback(() => {
-    if (photos.length <= 1) return;
-    const next = (current + 1) % photos.length;
-    goTo(next, 'next');
-  }, [current, goTo, photos.length]);
+    goTo((prev) => prev + 1, 'next');
+  }, [goTo]);
 
   const handlePrev = useCallback(() => {
-    if (photos.length <= 1) return;
-    const prev = (current - 1 + photos.length) % photos.length;
-    goTo(prev, 'prev');
-  }, [current, goTo, photos.length]);
+    goTo((prev) => prev - 1, 'prev');
+  }, [goTo]);
 
+  // Autoplay timer with stable cadence
   useEffect(() => {
     if (photos.length <= 1) return;
+
     const timer = setInterval(() => {
       handleNext();
     }, duration);
+
     return () => clearInterval(timer);
-  }, [handleNext, photos.length]);
+  }, [handleNext, photos.length, duration]);
+
+  const currentPhoto = photos[current];
 
   return (
     <section className="gallery-section">
@@ -101,22 +135,22 @@ export default function Gallery() {
             <span className="spinner-ring"></span>
             <p>Loading photo memories...</p>
           </div>
-        ) : (
+        ) : currentPhoto ? (
           <>
             <div className="gallery-viewport">
               <div className={`gallery-slide-card ${animating ? `slide-out-${direction}` : 'slide-in'}`}>
                 <img
-                  src={photos[current].url}
-                  alt={photos[current].title || 'VJ Education'}
+                  src={currentPhoto.url}
+                  alt={currentPhoto.title || 'VJ Education'}
                   className="gallery-main-image"
                 />
                 <div className="gallery-caption-overlay">
                   <span className="caption-tag">
-                    {photos[current].category || 'Campus Moment'}
+                    {currentPhoto.category || 'Campus Moment'}
                   </span>
-                  <h3 className="caption-title">{photos[current].title}</h3>
-                  {photos[current].description && (
-                    <p className="caption-desc">{photos[current].description}</p>
+                  <h3 className="caption-title">{currentPhoto.title}</h3>
+                  {currentPhoto.description && (
+                    <p className="caption-desc">{currentPhoto.description}</p>
                   )}
                 </div>
               </div>
@@ -154,7 +188,7 @@ export default function Gallery() {
               </div>
             )}
           </>
-        )}
+        ) : null}
       </div>
     </section>
   );

@@ -6,13 +6,15 @@ import Event from './components/Event/Event'
 
 function App() {
   const [notices, setNotices] = useState([])
-  const [noticeFilter, setNoticeFilter] = useState('all')
 
   useEffect(() => {
-    fetch('https://vj-education.onrender.com/api/notices')
-      .then(res => res.json())
-      .then(data => setNotices(Array.isArray(data) ? data : []))
-      .catch(err => {
+    const fetchNotices = async () => {
+      try {
+        const res = await fetch('https://vj-education.onrender.com/api/notices');
+        if (!res.ok) throw new Error('Failed to load notices');
+        const data = await res.json();
+        setNotices(Array.isArray(data) ? data : []);
+      } catch (err) {
         console.error("Failed to load notices:", err);
         // Fallback default notices so UI is never empty
         setNotices([
@@ -20,7 +22,10 @@ function App() {
           { _id: '2', title: 'Annual Sports & Cultural Meet registration begins next week.', link: '/gallery', date: 'Upcoming' },
           { _id: '3', title: 'Special Weekend Doubt Clearing Classes for Board Students.', link: '/Coaching', date: 'Notice' }
         ]);
-      });
+      }
+    };
+
+    fetchNotices();
   }, [])
 
   return (
